@@ -43,20 +43,31 @@ def solve():
         findExits(queue[0])
 
 def addToGraph(_id, exits, cur_room):
+    # Original dictionary for the room with all unknown exits.
     room_dict = {'n': '?', 'w': '?', 's': '?', 'e': '?'}
+
+    # Cycle through the passed exits, ex 'n', 'w', 's'
     for _exit in exits:
-        room_dict[_exit] = cur_room.getRoomInDirection(_exit)
+        # Override the '?' property on valid exits with the room ID
+        exit_room = cur_room.getRoomInDirection(_exit)
+        room_dict[_exit] = exit_room.id
+        # There is an exit we need to explore. Put it in the queue.
+        queue.append(_exit)
+    
+    # On the graph dictionary, use the ID as the key and the updated room_dict as values
     graph[_id] = room_dict
 
-def findExits(cur_room):
-    exits_for_graph = set()
-    cur_exits = cur_room.getExits()
-    for _exit in cur_exits:
-        queue.append(_exit)
-        exits_for_graph.add(_exit)
-    addToGraph(cur_room.id, exits_for_graph, cur_room)
+    # Explore the valid exits for this room
+    checkExits(exits)
 
-def checkExits():
+def findExits(cur_room):
+    # Get all of the current exits in string value. 'n', 's', etc.
+    cur_exits = cur_room.getExits()
+
+    # Add the exits for this room to the graph.
+    addToGraph(cur_room.id, cur_exits, cur_room)
+
+def checkExits(exits):
     pass
 
 
