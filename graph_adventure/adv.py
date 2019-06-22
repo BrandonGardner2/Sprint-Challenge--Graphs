@@ -21,7 +21,47 @@ player = Player("Name", world.startingRoom)
 
 
 # FILL THIS IN
-traversalPath = ['n', 's']
+# Tracks each step I make while exploring.
+traversalPath = []
+
+# The sprint wants a graph data structure representing the rooms and exits
+graph = dict()
+
+# I need a structure to list directions I should explore, in order.
+# Directions aren't unique, so an array may be the best bet to use as a queue
+queue = [player.currentRoom] 
+
+# Need a data structure to track visited rooms.
+visited = set()
+
+#Dictates when I've completely run out of locations to go.
+complete = False
+
+def solve():
+    visited.add(player.currentRoom.id)
+    while queue:
+        findExits(queue[0])
+
+def addToGraph(_id, exits, cur_room):
+    room_dict = {'n': '?', 'w': '?', 's': '?', 'e': '?'}
+    for _exit in exits:
+        room_dict[_exit] = cur_room.getRoomInDirection(_exit)
+    graph[_id] = room_dict
+
+def findExits(cur_room):
+    exits_for_graph = set()
+    cur_exits = cur_room.getExits()
+    for _exit in cur_exits:
+        queue.append(_exit)
+        exits_for_graph.add(_exit)
+    addToGraph(cur_room.id, exits_for_graph, cur_room)
+
+def checkExits():
+    pass
+
+
+
+
 
 
 # TRAVERSAL TEST
